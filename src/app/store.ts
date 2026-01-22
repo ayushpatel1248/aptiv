@@ -46,7 +46,13 @@ type AppState = {
   cancelTrip: () => void
 
   alerts: Alert[]
+  // Hospital SOS (includes nearest hospital details)
   triggerSOS: (message?: string) => void
+  // Police SOS (demo)
+  triggerSOSPolice: (message?: string) => void
+  // Guardian-only SOS (demo)
+  triggerSOSGuardian: (message?: string) => void
+
   resolveAlert: (id: string) => void
 
   // internal (for demo)
@@ -230,7 +236,7 @@ export const useAppStore = create<AppState>((set, get) => ({
         {
           id: `a_${Date.now()}`,
           type: 'sos',
-          title: 'SOS Triggered',
+          title: 'Hospital SOS Triggered',
           message:
             message ??
             `Nearest hospital: ${nearest.name} (${nearest.phone}). Sharing details with guardian.`,
@@ -250,7 +256,7 @@ export const useAppStore = create<AppState>((set, get) => ({
           id: `a_${Date.now() + 1}`,
           type: 'trip',
           title: 'Guardian notified',
-          message: `User triggered SOS. Hospital: ${nearest.name} • ${nearest.phone}`,
+          message: `User triggered Hospital SOS. Hospital: ${nearest.name} • ${nearest.phone}`,
           createdAt: Date.now(),
           location: current,
           hospital: nearest,
@@ -263,6 +269,73 @@ export const useAppStore = create<AppState>((set, get) => ({
           createdAt: Date.now(),
           location: nearest.location,
           hospital: nearest,
+        },
+        ...prev.alerts,
+      ],
+    }))
+  },
+
+  triggerSOSPolice: (message) => {
+    const current = get().trip.currentLocation
+    const policeNumber = '112'
+
+    set((prev) => ({
+      alerts: [
+        {
+          id: `a_${Date.now()}`,
+          type: 'sos',
+          title: 'Police SOS Triggered',
+          message: message ?? `Police emergency notified (demo). Call: ${policeNumber}`,
+          createdAt: Date.now(),
+          location: current,
+          resolved: false,
+        },
+        ...prev.alerts,
+      ],
+    }))
+
+    set((prev) => ({
+      alerts: [
+        {
+          id: `a_${Date.now() + 1}`,
+          type: 'trip',
+          title: 'Guardian notified',
+          message: `User triggered Police SOS. Emergency number: ${policeNumber}`,
+          createdAt: Date.now(),
+          location: current,
+        },
+        ...prev.alerts,
+      ],
+    }))
+  },
+
+  triggerSOSGuardian: (message) => {
+    const current = get().trip.currentLocation
+
+    set((prev) => ({
+      alerts: [
+        {
+          id: `a_${Date.now()}`,
+          type: 'sos',
+          title: 'Guardian SOS Triggered',
+          message: message ?? 'Guardian assistance requested (demo). Live location shared.',
+          createdAt: Date.now(),
+          location: current,
+          resolved: false,
+        },
+        ...prev.alerts,
+      ],
+    }))
+
+    set((prev) => ({
+      alerts: [
+        {
+          id: `a_${Date.now() + 1}`,
+          type: 'trip',
+          title: 'Guardian notified',
+          message: 'User requested guardian assistance. Live location shared.',
+          createdAt: Date.now(),
+          location: current,
         },
         ...prev.alerts,
       ],

@@ -13,7 +13,16 @@ function Badge(props: { children: React.ReactNode }) {
 }
 
 export function UserDashboard() {
-  const { trip, alerts, startMatching, startTrip, triggerSOS, cancelTrip } = useAppStore()
+  const {
+    trip,
+    alerts,
+    startMatching,
+    startTrip,
+    triggerSOS,
+    triggerSOSPolice,
+    triggerSOSGuardian,
+    cancelTrip,
+  } = useAppStore()
 
   const [selectedRoute, setSelectedRoute] = useState(routeOptions[0]!.id)
   const [showSosInfo, setShowSosInfo] = useState(false)
@@ -42,15 +51,29 @@ export function UserDashboard() {
               </div>
             </div>
 
-            <button
-              onClick={() => {
-                triggerSOS('SOS from User Portal (demo).')
-                setShowSosInfo(true)
-              }}
-              className="rounded-xl bg-red-600 px-4 py-2 text-sm font-bold text-white hover:bg-red-700"
-            >
-              SOS
-            </button>
+            <div className="flex flex-col items-end gap-2 sm:flex-row sm:items-center">
+              <button
+                onClick={() => triggerSOSPolice('Police SOS from User Portal (demo).')}
+                className="rounded-xl bg-red-700 px-3 py-2 text-xs font-extrabold text-white hover:bg-red-800"
+              >
+                Police
+              </button>
+              <button
+                onClick={() => {
+                  triggerSOS('Hospital SOS from User Portal (demo).')
+                  setShowSosInfo(true)
+                }}
+                className="rounded-xl bg-red-600 px-3 py-2 text-xs font-extrabold text-white hover:bg-red-700"
+              >
+                Hospital
+              </button>
+              <button
+                onClick={() => triggerSOSGuardian('Guardian SOS from User Portal (demo).')}
+                className="rounded-xl bg-slate-900 px-3 py-2 text-xs font-extrabold text-white hover:bg-slate-800"
+              >
+                Guardian
+              </button>
+            </div>
           </div>
 
           <div className="mt-4">
@@ -208,12 +231,29 @@ export function UserDashboard() {
                 </div>
               )}
               {trip.status === 'in_progress' && (
-                <button
-                  onClick={() => triggerSOS('SOS during trip (demo).')}
-                  className="mt-3 w-full rounded-xl bg-red-600 px-4 py-3 text-sm font-bold text-white"
-                >
-                  Trigger SOS
-                </button>
+                <div className="mt-3 grid gap-2">
+                  <button
+                    onClick={() => triggerSOSPolice('Police SOS during trip (demo).')}
+                    className="w-full rounded-xl bg-red-700 px-4 py-3 text-sm font-bold text-white"
+                  >
+                    SOS Police
+                  </button>
+                  <button
+                    onClick={() => {
+                      triggerSOS('Hospital SOS during trip (demo).')
+                      setShowSosInfo(true)
+                    }}
+                    className="w-full rounded-xl bg-red-600 px-4 py-3 text-sm font-bold text-white"
+                  >
+                    SOS Hospital
+                  </button>
+                  <button
+                    onClick={() => triggerSOSGuardian('Guardian SOS during trip (demo).')}
+                    className="w-full rounded-xl bg-slate-900 px-4 py-3 text-sm font-bold text-white"
+                  >
+                    SOS Guardian
+                  </button>
+                </div>
               )}
             </div>
           </div>
